@@ -2,4 +2,12 @@ body {
   color: black;
 }
 
-/*# sourceMappingURL=app.css.map */
+div {
+  background-color: beige;
+}
+div ul {
+  font-size: larger;
+}
+div ul li {
+  color: white;
+}
