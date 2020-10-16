@@ -4,11 +4,11 @@
             "previewLimit": 50,
             "server": "localhost",
             "port": 5432,
-            "askForPassword": true,
             "driver": "PostgreSQL",
             "name": "pg_db",
             "database": "tut_demo",
-            "username": "David"
+            "username": "David",
+            "password": "1234"
         }
     ]
 }
