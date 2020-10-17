@@ -20,10 +20,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserResolver = void 0;
-const User_1 = require("src/entities/User");
+const User_1 = require("../entities/User");
 const type_graphql_1 = require("type-graphql");
+const argon2_1 = __importDefault(require("argon2"));
 let UsernamePasswordInput = class UsernamePasswordInput {
 };
 __decorate([
@@ -40,14 +44,18 @@ UsernamePasswordInput = __decorate([
 let UserResolver = class UserResolver {
     register(options, { em }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = em.create(User_1.User, { username: options.username });
+            const hashedPass = yield argon2_1.default.hash(options.password);
+            const user = em.create(User_1.User, {
+                username: options.username,
+                password: hashedPass,
+            });
             yield em.persistAndFlush(user);
-            return "bye";
+            return user;
         });
     }
 };
 __decorate([
-    type_graphql_1.Mutation(() => String),
+    type_graphql_1.Mutation(() => User_1.User),
     __param(0, type_graphql_1.Arg("options")),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
