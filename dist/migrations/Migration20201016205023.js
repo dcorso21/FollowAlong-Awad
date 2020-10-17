@@ -19,4 +19,3 @@ class Migration20201016205023 extends migrations_1.Migration {
     }
 }
 exports.Migration20201016205023 = Migration20201016205023;
-//# sourceMappingURL=Migration20201016205023.js.map
