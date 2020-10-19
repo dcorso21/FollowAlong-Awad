@@ -37,7 +37,9 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
-    @Mutation(() => User)
+
+    // Register
+    @Mutation(() => UserResponse)
     async register(
         @Arg("options") options: UsernamePasswordInput,
         @Ctx() { em }: MyContext
@@ -71,6 +73,7 @@ export class UserResolver {
         try {
             await em.persistAndFlush(user);
         } catch (err) {
+            console.log("it broke", err)
             if (err.name === "UniqueConstraintViolationException") {
                 return {
                     errors: [
@@ -84,7 +87,7 @@ export class UserResolver {
                 return {
                     errors:[{
                             field: "username",
-                            message: "",
+                            message: err,
                     }]
                 }
             }
@@ -92,6 +95,7 @@ export class UserResolver {
         return { user };
     }
 
+    // LOG IN
     @Mutation(() => UserResponse)
     async login(
         @Arg("options") options: UsernamePasswordInput,
