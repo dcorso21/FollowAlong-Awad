@@ -41,6 +41,19 @@ __decorate([
 UsernamePasswordInput = __decorate([
     type_graphql_1.InputType()
 ], UsernamePasswordInput);
+let UserResponse = class UserResponse {
+};
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", Array)
+], UserResponse.prototype, "errors", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", Array)
+], UserResponse.prototype, "user", void 0);
+UserResponse = __decorate([
+    type_graphql_1.ObjectType()
+], UserResponse);
 let UserResolver = class UserResolver {
     register(options, { em }) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -53,6 +66,19 @@ let UserResolver = class UserResolver {
             return user;
         });
     }
+    login(options, { em }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield em.findOne(User_1.User, {
+                username: options.username.toLowerCase(),
+            });
+            if (!user) {
+                return {
+                    errors: [{}],
+                };
+            }
+            return user;
+        });
+    }
 };
 __decorate([
     type_graphql_1.Mutation(() => User_1.User),
@@ -62,6 +88,14 @@ __decorate([
     __metadata("design:paramtypes", [UsernamePasswordInput, Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "register", null);
+__decorate([
+    type_graphql_1.Mutation(() => User_1.User),
+    __param(0, type_graphql_1.Arg("options")),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [UsernamePasswordInput, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "login", null);
 UserResolver = __decorate([
     type_graphql_1.Resolver()
 ], UserResolver);

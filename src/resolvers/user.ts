@@ -1,6 +1,14 @@
 import { User } from "../entities/User";
 import { MyContext } from "src/types";
-import { Arg, Ctx, Field, InputType, Mutation, Resolver } from "type-graphql";
+import {
+    Arg,
+    Ctx,
+    Field,
+    InputType,
+    Mutation,
+    ObjectType,
+    Resolver,
+} from "type-graphql";
 import argon2 from "argon2";
 
 @InputType()
@@ -9,6 +17,14 @@ class UsernamePasswordInput {
     username!: string; // Bang sign means that you dont have to declare in the constructor
     @Field()
     password!: string;
+}
+
+@ObjectType()
+class UserResponse {
+    @Field()
+    errors?: Error[];
+    @Field()
+    user?: User[];
 }
 
 @Resolver()
@@ -24,6 +40,22 @@ export class UserResolver {
             password: hashedPass,
         });
         await em.persistAndFlush(user);
+        return user;
+    }
+
+    @Mutation(() => User)
+    async login(
+        @Arg("options") options: UsernamePasswordInput,
+        @Ctx() { em }: MyContext
+    ) {
+        const user = await em.findOne(User, {
+            username: options.username.toLowerCase(),
+        });
+        if (!user) {
+            return {
+                errors: [{}],
+            };
+        }
         return user;
     }
 }
